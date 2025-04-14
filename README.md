@@ -165,14 +165,23 @@ testing of server logic and handlers.
    {
      "mcpServers": {
        "google-calendar": {
-         "command": "node",
-         "args": ["<absolute-path-to-project-folder>/build/index.js"]
+         "command": "<absolute-path-to-deno>",
+         "args": [
+            "run",
+            "--allow-env",
+            "--allow-sys=osRelease,cpus,homedir,uid",
+            "--deny-read=<absolute-path-to-home-directory>/Library/Caches/deno/node_modules",
+            "--allow-read=<absolute-path-to-project-folder>/gcp-oauth.keys.json,<absolute-path-to-project-folder>/.gcp-saved-tokens.json,<absolute-path-to-home-directory>/.deno/bin/deno",
+            "--allow-write=<absolute-path-to-project-folder>",
+            "--allow-net=0.0.0.0:3000,oauth2.googleapis.com:443,www.googleapis.com:443",
+            "--allow-run=open",
+            "<absolute-path-to-project-folder>/src/index.ts"
+         ]
        }
      }
    }
    ```
-   Note: Replace `<absolute-path-to-project-folder>` with the actual path to
-   your project directory.
+   Note: Replace `<absolute-path-to-deno>`, `<absolute-path-to-home-directory>`, and `<absolute-path-to-project-folder>` with the actual paths.
 
 2. Restart Claude Desktop
 
