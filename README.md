@@ -1,4 +1,4 @@
-# Google Calendar MCP Server
+# Google Calendar MCP Server for Deno
 
 This is a Model Context Protocol (MCP) server that provides integration with
 Google Calendar. It allows LLMs to read, create, update and search for calendar
