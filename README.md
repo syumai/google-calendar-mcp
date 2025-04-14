@@ -139,6 +139,8 @@ If you need to re-authenticate or prefer to handle authentication separately:
 
 ## Testing
 
+WIP (currently not working)
+
 Unit and integration tests are implemented using [Vitest](https://vitest.dev/).
 
 - Run tests: `npm test`
