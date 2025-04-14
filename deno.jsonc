@@ -1,7 +1,7 @@
 {
   "tasks": {
-    "start": "deno run --allow-env --deny-read=$HOME/Library/Caches/deno/node_modules --allow-read=./gcp-oauth.keys.json,./.gcp-saved-tokens.json,$HOME/.deno/bin/deno --allow-write=./ --allow-net=0.0.0.0:3000,oauth2.googleapis.com:443 --allow-run=open ./src/index.ts",
-    "auth": "deno run --allow-env --deny-read=$HOME/Library/Caches/deno/node_modules --allow-read=./gcp-oauth.keys.json,./.gcp-saved-tokens.json,$HOME/.deno/bin/deno --allow-write=./ --allow-net=0.0.0.0:3000,oauth2.googleapis.com:443 --allow-run=open ./src/auth-server.ts",
+    "start": "deno run --allow-env --deny-read=$HOME/Library/Caches/deno/node_modules --allow-read=./gcp-oauth.keys.json,./.gcp-saved-tokens.json,$HOME/.deno/bin/deno --allow-write=./ --allow-net=0.0.0.0:3000,oauth2.googleapis.com:443,www.googleapis.com:443 --allow-run=open ./src/index.ts",
+    "auth": "deno run --allow-env --deny-read=$HOME/Library/Caches/deno/node_modules --allow-read=./gcp-oauth.keys.json,./.gcp-saved-tokens.json,$HOME/.deno/bin/deno --allow-write=./ --allow-net=0.0.0.0:3000,oauth2.googleapis.com:443,www.googleapis.com:443 --allow-run=open ./src/auth-server.ts",
     "test": "vitest",
     "test:watch": "vitest --watch",
     "coverage": "vitest run --coverage"
