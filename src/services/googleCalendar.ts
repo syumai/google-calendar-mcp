@@ -7,7 +7,7 @@ import {
     CreateEventArgumentsSchema,
     UpdateEventArgumentsSchema,
     DeleteEventArgumentsSchema,
-} from '../schemas/validators.js';
+} from '../schemas/validators.ts';
 import { z } from 'zod';
 
 // Helper function to handle common GaxiosError for invalid grant

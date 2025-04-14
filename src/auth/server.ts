@@ -1,9 +1,9 @@
-import express from 'express';
-import { OAuth2Client } from 'google-auth-library';
-import { TokenManager } from './tokenManager.js';
-import http from 'http';
-import open from 'open';
-import { loadCredentials } from './client.js';
+import express from "express";
+import { OAuth2Client } from "google-auth-library";
+import { TokenManager } from "./tokenManager.ts";
+import type http from "node:http";
+import open from "open";
+import { loadCredentials } from "./client.ts";
 
 export class AuthServer {
   private baseOAuth2Client: OAuth2Client; // Used by TokenManager for validation/refresh
@@ -23,27 +23,29 @@ export class AuthServer {
   }
 
   private setupRoutes(): void {
-    this.app.get('/', (req, res) => {
+    this.app.get("/", (req, res) => {
       // Generate the URL using the active flow client if available, else base
       const clientForUrl = this.flowOAuth2Client || this.baseOAuth2Client;
-      const scopes = ['https://www.googleapis.com/auth/calendar'];
+      const scopes = ["https://www.googleapis.com/auth/calendar"];
       const authUrl = clientForUrl.generateAuthUrl({
-        access_type: 'offline',
+        access_type: "offline",
         scope: scopes,
-        prompt: 'consent'
+        prompt: "consent",
       });
-      res.send(`<h1>Google Calendar Authentication</h1><a href="${authUrl}">Authenticate with Google</a>`);
+      res.send(
+        `<h1>Google Calendar Authentication</h1><a href="${authUrl}">Authenticate with Google</a>`
+      );
     });
 
-    this.app.get('/oauth2callback', async (req, res) => {
+    this.app.get("/oauth2callback", async (req, res) => {
       const code = req.query.code as string;
       if (!code) {
-        res.status(400).send('Authorization code missing');
+        res.status(400).send("Authorization code missing");
         return;
       }
       // IMPORTANT: Use the flowOAuth2Client to exchange the code
       if (!this.flowOAuth2Client) {
-        res.status(500).send('Authentication flow not properly initiated.');
+        res.status(500).send("Authentication flow not properly initiated.");
         return;
       }
       try {
@@ -83,7 +85,8 @@ export class AuthServer {
         `);
       } catch (error: unknown) {
         this.authCompletedSuccessfully = false;
-        const message = error instanceof Error ? error.message : 'Unknown error';
+        const message =
+          error instanceof Error ? error.message : "Unknown error";
         // Send an HTML error response
         res.status(500).send(`
           <!DOCTYPE html>
@@ -118,7 +121,7 @@ export class AuthServer {
       this.authCompletedSuccessfully = true;
       return true;
     }
-    
+
     // Try to start the server and get the port
     const port = await this.startServerOnAvailablePort();
     if (port === null) {
@@ -135,18 +138,18 @@ export class AuthServer {
         `http://localhost:${port}/oauth2callback`
       );
     } catch (error) {
-        // Could not load credentials, cannot proceed with auth flow
-        this.authCompletedSuccessfully = false;
-        await this.stop(); // Stop the server we just started
-        return false;
+      // Could not load credentials, cannot proceed with auth flow
+      this.authCompletedSuccessfully = false;
+      await this.stop(); // Stop the server we just started
+      return false;
     }
 
     if (openBrowser) {
       // Generate Auth URL using the newly created flow client
       const authorizeUrl = this.flowOAuth2Client.generateAuthUrl({
-        access_type: 'offline',
-        scope: ['https://www.googleapis.com/auth/calendar'],
-        prompt: 'consent'
+        access_type: "offline",
+        scope: ["https://www.googleapis.com/auth/calendar"],
+        prompt: "consent",
       });
       await open(authorizeUrl);
     }
@@ -163,10 +166,10 @@ export class AuthServer {
             this.server = testServer; // Assign to class property *only* if successful
             resolve();
           });
-          testServer.on('error', (err: NodeJS.ErrnoException) => {
-            if (err.code === 'EADDRINUSE') {
+          testServer.on("error", (err: NodeJS.ErrnoException) => {
+            if (err.code === "EADDRINUSE") {
               // Port is in use, close the test server and reject
-              testServer.close(() => reject(err)); 
+              testServer.close(() => reject(err));
             } else {
               // Other error, reject
               reject(err);
@@ -176,9 +179,15 @@ export class AuthServer {
         return port; // Port successfully bound
       } catch (error: unknown) {
         // Check if it's EADDRINUSE, otherwise rethrow or handle
-        if (!(error instanceof Error && 'code' in error && error.code === 'EADDRINUSE')) {
-            // An unexpected error occurred during server start
-            return null;
+        if (
+          !(
+            error instanceof Error &&
+            "code" in error &&
+            error.code === "EADDRINUSE"
+          )
+        ) {
+          // An unexpected error occurred during server start
+          return null;
         }
         // EADDRINUSE occurred, loop continues
       }
@@ -189,7 +198,7 @@ export class AuthServer {
   public getRunningPort(): number | null {
     if (this.server) {
       const address = this.server.address();
-      if (typeof address === 'object' && address !== null) {
+      if (typeof address === "object" && address !== null) {
         return address.port;
       }
     }
@@ -212,4 +221,4 @@ export class AuthServer {
       }
     });
   }
-} 
+}

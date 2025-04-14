@@ -34,10 +34,9 @@ Along with the normal capabilities you would expect for a calendar integration y
 
 ## Requirements
 
-1. Node.js (Latest LTS recommended)
-2. TypeScript 5.3 or higher
-3. A Google Cloud project with the Calendar API enabled
-4. OAuth 2.0 credentials (Client ID and Client Secret)
+1. Deno
+2. A Google Cloud project with the Calendar API enabled
+3. OAuth 2.0 credentials (Client ID and Client Secret)
 
 ## Google Cloud Setup
 
@@ -59,9 +58,9 @@ Along with the normal capabilities you would expect for a calendar integration y
 ## Installation
 
 1. Clone the repository
-2. Install dependencies (this also builds the js via postinstall):
+2. Install dependencies
    ```bash
-   npm install
+   deno install
    ```
 3. Download your Google OAuth credentials from the Google Cloud Console (under "Credentials") and rename the file to `gcp-oauth.keys.json` and place it in the root directory of the project.
    - Ensure the file contains credentials for a "Desktop app".
@@ -69,13 +68,11 @@ Along with the normal capabilities you would expect for a calendar integration y
 
 ## Available Scripts
 
-- `npm run build` - Build the TypeScript code (compiles `src` to `build`)
-- `npm run typecheck` - Run TypeScript type checking without compiling
-- `npm run start` - Start the compiled MCP server (using `node build/index.js`)
-- `npm run auth` - Manually run the Google OAuth authentication flow.
-- `npm test` - Run the unit/integration test suite using Vitest
-- `npm run test:watch` - Run tests in watch mode
-- `npm run coverage` - Run tests and generate a coverage report
+- `deno task start` - Start the MCP server
+- `deno task auth` - Manually run the Google OAuth authentication flow.
+- `deno task test` - Run the unit/integration test suite using Vitest
+- `deno task test:watch` - Run tests in watch mode
+- `deno task coverage` - Run tests and generate a coverage report
 
 ## Authentication
 

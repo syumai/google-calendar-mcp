@@ -1,9 +1,9 @@
-import { defineConfig } from 'vitest/config'
+import { defineConfig } from "vitest/config.js";
 
 export default defineConfig({
   test: {
     globals: true, // Use Vitest globals (describe, it, expect) like Jest
-    environment: 'node', // Specify the test environment
+    environment: "node", // Specify the test environment
     // If using ESM, ensure module resolution is handled correctly
     // You might not need alias if your tsconfig paths work, but it can be explicit:
     // alias: {
@@ -11,8 +11,8 @@ export default defineConfig({
     // },
     // Enable coverage
     coverage: {
-      provider: 'v8', // or 'istanbul'
-      reporter: ['text', 'json', 'html'],
+      provider: "v8", // or 'istanbul'
+      reporter: ["text", "json", "html"],
     },
   },
-}) 
+});

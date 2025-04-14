@@ -1,0 +1,30 @@
+{
+  "tasks": {
+    "start": "deno run --allow-env --deny-read=$HOME/Library/Caches/deno/node_modules --allow-read=./gcp-oauth.keys.json,./.gcp-saved-tokens.json,$HOME/.deno/bin/deno --allow-write=./ --allow-net=0.0.0.0:3000 --allow-run=open ./src/index.ts",
+    "auth": "deno run --allow-env --deny-read=$HOME/Library/Caches/deno/node_modules --allow-read=./gcp-oauth.keys.json,./.gcp-saved-tokens.json,$HOME/.deno/bin/deno --allow-write=./ --allow-net=0.0.0.0:3000 --allow-run=open ./src/auth-server.ts",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "coverage": "vitest run --coverage"
+  },
+  "imports": {
+    "@google-cloud/local-auth": "npm:@google-cloud/local-auth",
+    "@modelcontextprotocol/sdk": "npm:@modelcontextprotocol/sdk@1.0.3",
+    "@types/express": "npm:@types/express",
+    "esbuild": "npm:esbuild",
+    "express": "npm:express",
+    "gaxios": "npm:gaxios@^6.7.1",
+    "google-auth-library": "npm:google-auth-library",
+    "googleapis": "npm:googleapis@^148.0.0",
+    "open": "npm:open",
+    "zod": "npm:zod",
+    "@types/node": "npm:@types/node",
+    "@vitest/coverage-v8": "npm:@vitest/coverage-v8",
+    "typescript": "npm:typescript",
+    "vitest": "npm:vitest"
+  },
+  "compilerOptions": {
+    "strict": true,
+    "types": ["node"]
+  },
+  "unstable": ["sloppy-imports"]
+}

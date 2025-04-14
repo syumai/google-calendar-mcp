@@ -1,12 +1,12 @@
-import * as path from 'path';
-import { fileURLToPath } from 'url';
+import * as path from "node:path";
+import { fileURLToPath } from "node:url";
 
 // Helper to get the project root directory reliably
 function getProjectRoot(): string {
-  const __dirname = path.dirname(fileURLToPath(import.meta.url)); 
+  const __dirname = path.dirname(fileURLToPath(import.meta.url));
   // In build output (e.g., build/bundle.js), __dirname is .../build
   // Go up ONE level to get the project root
-  const projectRoot = path.join(__dirname, ".."); // Corrected: Go up ONE level
+  const projectRoot = path.join(__dirname, "../.."); // Corrected: Go up TWO levels
   return path.resolve(projectRoot); // Ensure absolute path
 }
 
@@ -20,6 +20,6 @@ export function getSecureTokenPath(): string {
 // Returns the absolute path for the GCP OAuth keys file.
 export function getKeysFilePath(): string {
   const projectRoot = getProjectRoot();
-  const keysPath = path.join(projectRoot, "gcp-oauth.keys.json"); 
+  const keysPath = path.join(projectRoot, "gcp-oauth.keys.json");
   return keysPath; // Already absolute from getProjectRoot
-} 
+}

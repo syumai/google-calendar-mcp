@@ -4,17 +4,15 @@ import {
   ListToolsRequestSchema,
   CallToolRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
-import { OAuth2Client } from "google-auth-library";
-import { fileURLToPath } from "url";
+import type { OAuth2Client } from "google-auth-library";
 
-// Import modular components
-import { initializeOAuth2Client } from './auth/client.js';
-import { AuthServer } from './auth/server.js';
-import { TokenManager } from './auth/tokenManager.js';
-import { getToolDefinitions } from './handlers/listTools.js';
-import { handleCallTool } from './handlers/callTool.js';
+import { initializeOAuth2Client } from "./auth/client.ts";
+import { AuthServer } from "./auth/server.ts";
+import { TokenManager } from "./auth/tokenManager.ts";
+import { getToolDefinitions } from "./handlers/listTools.ts";
+import { handleCallTool } from "./handlers/callTool.ts";
 
-// --- Global Variables --- 
+// --- Global Variables ---
 // Create server instance (global for export)
 const server = new Server(
   {
@@ -32,7 +30,7 @@ let oauth2Client: OAuth2Client;
 let tokenManager: TokenManager;
 let authServer: AuthServer;
 
-// --- Main Application Logic --- 
+// --- Main Application Logic ---
 async function main() {
   try {
     // 1. Initialize Authentication
@@ -44,11 +42,11 @@ async function main() {
     // The start method internally validates tokens first
     const authSuccess = await authServer.start();
     if (!authSuccess) {
-      process.exit(1);
+      Deno.exit(1);
     }
 
     // 3. Set up MCP Handlers
-    
+
     // List Tools Handler
     server.setRequestHandler(ListToolsRequestSchema, async () => {
       // Directly return the definitions from the handler module
@@ -59,9 +57,11 @@ async function main() {
     server.setRequestHandler(CallToolRequestSchema, async (request) => {
       // Check if tokens are valid before handling the request
       if (!(await tokenManager.validateTokens())) {
-        throw new Error("Authentication required. Please run 'npm run auth' to authenticate.");
+        throw new Error(
+          "Authentication required. Please run 'npm run auth' to authenticate."
+        );
       }
-      
+
       // Delegate the actual tool execution to the specialized handler
       return handleCallTool(request, oauth2Client);
     });
@@ -71,35 +71,34 @@ async function main() {
     await server.connect(transport);
 
     // 5. Set up Graceful Shutdown
-    process.on("SIGINT", cleanup);
-    process.on("SIGTERM", cleanup);
-
+    Deno.addSignalListener("SIGINT", cleanup);
+    Deno.addSignalListener("SIGTERM", cleanup);
   } catch (error: unknown) {
-    process.exit(1);
+    Deno.exit(1);
   }
 }
 
-// --- Cleanup Logic --- 
+// --- Cleanup Logic ---
 async function cleanup() {
   try {
     if (authServer) {
       // Attempt to stop the auth server if it exists and might be running
       await authServer.stop();
     }
-    process.exit(0);
+    Deno.exit(0);
   } catch (error: unknown) {
-    process.exit(1);
+    Deno.exit(1);
   }
 }
 
-// --- Exports & Execution Guard --- 
+// --- Exports & Execution Guard ---
 // Export server and main for testing or potential programmatic use
 export { main, server };
 
 // Run main() only when this script is executed directly
-const isDirectRun = import.meta.url.startsWith('file://') && process.argv[1] === fileURLToPath(import.meta.url);
+const isDirectRun = import.meta.url.startsWith("file://");
 if (isDirectRun) {
   main().catch(() => {
-    process.exit(1);
+    Deno.exit(1);
   });
 }
