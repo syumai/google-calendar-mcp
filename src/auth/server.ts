@@ -33,7 +33,7 @@ export class AuthServer {
         prompt: "consent",
       });
       res.send(
-        `<h1>Google Calendar Authentication</h1><a href="${authUrl}">Authenticate with Google</a>`
+        `<h1>Google Calendar Authentication</h1><a href="${authUrl}">Authenticate with Google</a>`,
       );
     });
 
@@ -85,8 +85,9 @@ export class AuthServer {
         `);
       } catch (error: unknown) {
         this.authCompletedSuccessfully = false;
-        const message =
-          error instanceof Error ? error.message : "Unknown error";
+        const message = error instanceof Error
+          ? error.message
+          : "Unknown error";
         // Send an HTML error response
         res.status(500).send(`
           <!DOCTYPE html>
@@ -135,7 +136,7 @@ export class AuthServer {
       this.flowOAuth2Client = new OAuth2Client(
         client_id,
         client_secret,
-        `http://localhost:${port}/oauth2callback`
+        `http://localhost:${port}/oauth2callback`,
       );
     } catch (_error) {
       // Could not load credentials, cannot proceed with auth flow

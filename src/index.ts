@@ -23,7 +23,7 @@ const server = new Server(
     capabilities: {
       tools: {},
     },
-  }
+  },
 );
 
 let oauth2Client: OAuth2Client;
@@ -58,7 +58,7 @@ async function main() {
       // Check if tokens are valid before handling the request
       if (!(await tokenManager.validateTokens())) {
         throw new Error(
-          "Authentication required. Please run 'npm run auth' to authenticate."
+          "Authentication required. Please run 'npm run auth' to authenticate.",
         );
       }
 
