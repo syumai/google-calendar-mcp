@@ -9,11 +9,6 @@ import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { google as GoogleApis } from "googleapis";
 import type * as FsPromises from "node:fs/promises";
 import type { Server as MCPServerType } from "@modelcontextprotocol/sdk/server";
-import type {
-  CallToolRequestSchema,
-  ListToolsRequestSchema,
-} from "@modelcontextprotocol/sdk/types";
-import type { TokenManager } from "./auth/tokenManager.ts";
 import process from "node:process";
 
 // --- Mocks ---
@@ -103,7 +98,7 @@ vi.mock("@modelcontextprotocol/sdk/server/index.js", () => {
   return {
     Server: vi.fn().mockImplementation(() => {
       const instance = {
-        setRequestHandler: vi.fn((schema: any, handler: any) => {
+        setRequestHandler: vi.fn((schema, handler) => {
           // Store handlers in a map on the instance
           if (!instance.capturedHandlerMap) {
             instance.capturedHandlerMap = new Map();
@@ -111,7 +106,7 @@ vi.mock("@modelcontextprotocol/sdk/server/index.js", () => {
           instance.capturedHandlerMap.set(schema, handler);
         }),
         connect: vi.fn().mockResolvedValue(undefined),
-        capturedHandlerMap: null as Map<any, Function> | null, // Property to store handlers
+        capturedHandlerMap: null as Map<unknown, unknown> | null, // Property to store handlers
       };
       return instance;
     }),
@@ -125,26 +120,21 @@ vi.mock("@modelcontextprotocol/sdk/server/stdio.js", () => ({
 
 // Import necessary modules AFTER mocks are set up
 const { google } = await import("googleapis");
-const fs = await import("fs/promises");
-
-// Need to dynamically import the schema *after* mocking the SDK
-const { CallToolRequestSchema } = await import(
-  "@modelcontextprotocol/sdk/types.js"
-);
+const fs = await import("node:fs/promises");
 
 // Import the module to be tested AFTER mocks
 // It won't run main automatically due to the check we added
 const indexModule = await import("./index.ts");
 const main = indexModule.main;
 const server = indexModule.server as unknown as MCPServerType & {
-  capturedHandlerMap: Map<any, Function> | null;
+  capturedHandlerMap: Map<unknown, unknown> | null;
 }; // Get exported server
 
 // --- Test Suite ---
 
 describe("Google Calendar MCP Tool Calls", () => {
   let mockCalendarApi: ReturnType<GoogleApis["calendar"]>;
-  let callToolHandler: ((request: any) => Promise<any>) | null = null;
+  let callToolHandler: ((request: unknown) => Promise<unknown>) | null = null;
 
   beforeAll(async () => {
     // Reset mocks that might have been called during import
@@ -179,7 +169,7 @@ describe("Google Calendar MCP Tool Calls", () => {
     await main();
 
     // Capture the handler from the map on the mocked server instance
-    if (server && server.capturedHandlerMap) {
+    if (server?.capturedHandlerMap) {
       // Dynamically get the actual schema object after mocks ran
       const { CallToolRequestSchema } = await import(
         "@modelcontextprotocol/sdk/types.js"
@@ -190,10 +180,10 @@ describe("Google Calendar MCP Tool Calls", () => {
     if (!callToolHandler) {
       console.error(
         "capturedHandlerMap on server instance:",
-        server?.capturedHandlerMap,
+        server?.capturedHandlerMap
       );
       throw new Error(
-        "CallTool handler not captured from server instance after main run.",
+        "CallTool handler not captured from server instance after main run."
       );
     }
   });
@@ -230,7 +220,7 @@ describe("Google Calendar MCP Tool Calls", () => {
     // Act & Assert: Expect the handler to reject because we mocked validateTokens to return false
     if (!callToolHandler) throw new Error("callToolHandler not captured");
     await expect(callToolHandler(request)).rejects.toThrow(
-      "Authentication required. Please run 'npm run auth' to authenticate.",
+      "Authentication required. Please run 'npm run auth' to authenticate."
     );
   });
 
@@ -329,8 +319,7 @@ describe("Google Calendar MCP Tool Calls", () => {
       content: [
         {
           type: "text",
-          text:
-            `Event created: ${mockApiResponse.summary} (${mockApiResponse.id})`,
+          text: `Event created: ${mockApiResponse.summary} (${mockApiResponse.id})`,
         },
       ],
     });
@@ -384,7 +373,7 @@ describe("Google Calendar MCP Tool Calls", () => {
     (mockCalendarApi.events.list as ReturnType<typeof vi.fn>).mockResolvedValue(
       {
         data: { items: mockEvents },
-      },
+      }
     );
 
     const request = {
@@ -432,7 +421,7 @@ describe("Google Calendar MCP Tool Calls", () => {
     (mockCalendarApi.events.list as ReturnType<typeof vi.fn>).mockResolvedValue(
       {
         data: { items: mockEvents },
-      },
+      }
     );
 
     const request = {
@@ -517,10 +506,10 @@ describe("Google Calendar MCP Tool Calls", () => {
     expect(mockCalendarApi.colors.get).toHaveBeenCalled();
     expect(result.content[0].text).toContain("Available event colors:");
     expect(result.content[0].text).toContain(
-      "Color ID: 1 - #a4bdfc (background) / #1d1d1d (foreground)",
+      "Color ID: 1 - #a4bdfc (background) / #1d1d1d (foreground)"
     );
     expect(result.content[0].text).toContain(
-      "Color ID: 2 - #7ae7bf (background) / #1d1d1d (foreground)",
+      "Color ID: 2 - #7ae7bf (background) / #1d1d1d (foreground)"
     );
   });
 
@@ -577,7 +566,7 @@ describe("Google Calendar MCP Tool Calls", () => {
       },
     });
     expect(result.content[0].text).toBe(
-      `Event updated: ${mockApiResponse.summary} (${mockApiResponse.id})`,
+      `Event updated: ${mockApiResponse.summary} (${mockApiResponse.id})`
     );
   });
 

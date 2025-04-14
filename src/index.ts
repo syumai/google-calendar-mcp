@@ -23,7 +23,7 @@ const server = new Server(
     capabilities: {
       tools: {},
     },
-  },
+  }
 );
 
 let oauth2Client: OAuth2Client;
@@ -48,7 +48,7 @@ async function main() {
     // 3. Set up MCP Handlers
 
     // List Tools Handler
-    server.setRequestHandler(ListToolsRequestSchema, async () => {
+    server.setRequestHandler(ListToolsRequestSchema, () => {
       // Directly return the definitions from the handler module
       return getToolDefinitions();
     });
@@ -58,7 +58,7 @@ async function main() {
       // Check if tokens are valid before handling the request
       if (!(await tokenManager.validateTokens())) {
         throw new Error(
-          "Authentication required. Please run 'npm run auth' to authenticate.",
+          "Authentication required. Please run 'npm run auth' to authenticate."
         );
       }
 
@@ -73,7 +73,7 @@ async function main() {
     // 5. Set up Graceful Shutdown
     Deno.addSignalListener("SIGINT", cleanup);
     Deno.addSignalListener("SIGTERM", cleanup);
-  } catch (error: unknown) {
+  } catch (_error: unknown) {
     Deno.exit(1);
   }
 }
@@ -86,7 +86,7 @@ async function cleanup() {
       await authServer.stop();
     }
     Deno.exit(0);
-  } catch (error: unknown) {
+  } catch (_error: unknown) {
     Deno.exit(1);
   }
 }

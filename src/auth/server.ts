@@ -23,7 +23,7 @@ export class AuthServer {
   }
 
   private setupRoutes(): void {
-    this.app.get("/", (req, res) => {
+    this.app.get("/", (_req, res) => {
       // Generate the URL using the active flow client if available, else base
       const clientForUrl = this.flowOAuth2Client || this.baseOAuth2Client;
       const scopes = ["https://www.googleapis.com/auth/calendar"];
@@ -33,7 +33,7 @@ export class AuthServer {
         prompt: "consent",
       });
       res.send(
-        `<h1>Google Calendar Authentication</h1><a href="${authUrl}">Authenticate with Google</a>`,
+        `<h1>Google Calendar Authentication</h1><a href="${authUrl}">Authenticate with Google</a>`
       );
     });
 
@@ -85,9 +85,8 @@ export class AuthServer {
         `);
       } catch (error: unknown) {
         this.authCompletedSuccessfully = false;
-        const message = error instanceof Error
-          ? error.message
-          : "Unknown error";
+        const message =
+          error instanceof Error ? error.message : "Unknown error";
         // Send an HTML error response
         res.status(500).send(`
           <!DOCTYPE html>
@@ -136,9 +135,9 @@ export class AuthServer {
       this.flowOAuth2Client = new OAuth2Client(
         client_id,
         client_secret,
-        `http://localhost:${port}/oauth2callback`,
+        `http://localhost:${port}/oauth2callback`
       );
-    } catch (error) {
+    } catch (_error) {
       // Could not load credentials, cannot proceed with auth flow
       this.authCompletedSuccessfully = false;
       await this.stop(); // Stop the server we just started
@@ -206,7 +205,7 @@ export class AuthServer {
     return null;
   }
 
-  async stop(): Promise<void> {
+  stop(): Promise<void> {
     return new Promise((resolve, reject) => {
       if (this.server) {
         this.server.close((err) => {

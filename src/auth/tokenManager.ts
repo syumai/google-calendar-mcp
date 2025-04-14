@@ -41,7 +41,7 @@ export class TokenManager {
       try {
         await this.ensureTokenDirectoryExists();
         const currentTokens = JSON.parse(
-          await fs.readFile(this.tokenPath, "utf-8"),
+          await fs.readFile(this.tokenPath, "utf-8")
         );
         const updatedTokens = {
           ...currentTokens,
@@ -53,7 +53,7 @@ export class TokenManager {
           JSON.stringify(updatedTokens, null, 2),
           {
             mode: 0o600,
-          },
+          }
         );
         console.error("Tokens updated and saved");
       } catch (error: unknown) {
@@ -67,7 +67,7 @@ export class TokenManager {
             await fs.writeFile(
               this.tokenPath,
               JSON.stringify(newTokens, null, 2),
-              { mode: 0o600 },
+              { mode: 0o600 }
             );
             console.error("New tokens saved");
           } catch (writeError) {
@@ -113,7 +113,7 @@ export class TokenManager {
         try {
           await fs.unlink(this.tokenPath);
           console.error("Removed potentially corrupted token file");
-        } catch (unlinkErr) {
+        } catch (_unlinkErr) {
           /* ignore */
         }
       }
@@ -146,7 +146,7 @@ export class TokenManager {
           refreshError.response?.data?.error === "invalid_grant"
         ) {
           console.error(
-            "Error refreshing auth token: Invalid grant. Token likely expired or revoked. Please re-authenticate.",
+            "Error refreshing auth token: Invalid grant. Token likely expired or revoked. Please re-authenticate."
           );
           // Optionally clear the potentially invalid tokens here
           // await this.clearTokens();
@@ -162,7 +162,7 @@ export class TokenManager {
       !this.oauth2Client.credentials.refresh_token
     ) {
       console.error(
-        "No access or refresh token available. Please re-authenticate.",
+        "No access or refresh token available. Please re-authenticate."
       );
       return false;
     } else {
