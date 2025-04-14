@@ -6,7 +6,7 @@ export interface CalendarListEntry {
 }
 
 export interface CalendarEventReminder {
-  method: 'email' | 'popup';
+  method: "email" | "popup";
   minutes: number;
 }
 
@@ -36,4 +36,4 @@ export interface CalendarEvent {
     overrides?: CalendarEventReminder[];
   };
   recurrence?: string[] | null;
-} 
+}

@@ -2,27 +2,27 @@ import type { CallToolRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 import type { OAuth2Client } from "google-auth-library";
 import type { calendar_v3 } from "googleapis";
 import {
+  CreateEventArgumentsSchema,
+  DeleteEventArgumentsSchema,
   ListEventsArgumentsSchema,
   SearchEventsArgumentsSchema,
-  CreateEventArgumentsSchema,
   UpdateEventArgumentsSchema,
-  DeleteEventArgumentsSchema,
 } from "../schemas/validators.ts";
 import {
+  createEvent,
+  deleteEvent,
   listCalendars,
+  listColors,
   listEvents,
   searchEvents,
-  listColors,
-  createEvent,
   updateEvent,
-  deleteEvent,
 } from "../services/googleCalendar.ts";
 
 /**
  * Formats a list of calendars into a user-friendly string.
  */
 function formatCalendarList(
-  calendars: calendar_v3.Schema$CalendarListEntry[]
+  calendars: calendar_v3.Schema$CalendarListEntry[],
 ): string {
   return calendars
     .map((cal) => `${cal.summary || "Untitled"} (${cal.id || "no-id"})`)
@@ -36,12 +36,14 @@ function formatEventList(events: calendar_v3.Schema$Event[]): string {
   return events
     .map((event) => {
       const attendeeList = event.attendees
-        ? `\nAttendees: ${event.attendees
+        ? `\nAttendees: ${
+          event.attendees
             .map(
               (a) =>
-                `${a.email || "no-email"} (${a.responseStatus || "unknown"})`
+                `${a.email || "no-email"} (${a.responseStatus || "unknown"})`,
             )
-            .join(", ")}`
+            .join(", ")
+        }`
         : "";
       const locationInfo = event.location
         ? `\nLocation: ${event.location}`
@@ -49,12 +51,12 @@ function formatEventList(events: calendar_v3.Schema$Event[]): string {
       const colorInfo = event.colorId ? `\nColor ID: ${event.colorId}` : "";
       const reminderInfo = event.reminders
         ? `\nReminders: ${
-            event.reminders.useDefault
-              ? "Using default"
-              : (event.reminders.overrides || [])
-                  .map((r: any) => `${r.method} ${r.minutes} minutes before`)
-                  .join(", ") || "None"
-          }`
+          event.reminders.useDefault
+            ? "Using default"
+            : (event.reminders.overrides || [])
+              .map((r: any) => `${r.method} ${r.minutes} minutes before`)
+              .join(", ") || "None"
+        }`
         : "";
       return `${event.summary || "Untitled"} (${
         event.id || "no-id"
@@ -75,7 +77,7 @@ function formatColorList(colors: calendar_v3.Schema$Colors): string {
   return Object.entries(eventColors)
     .map(
       ([id, colorInfo]) =>
-        `Color ID: ${id} - ${colorInfo.background} (background) / ${colorInfo.foreground} (foreground)`
+        `Color ID: ${id} - ${colorInfo.background} (background) / ${colorInfo.foreground} (foreground)`,
     )
     .join("\n");
 }
@@ -90,7 +92,7 @@ function formatColorList(colors: calendar_v3.Schema$Colors): string {
  */
 export async function handleCallTool(
   request: typeof CallToolRequestSchema._type,
-  oauth2Client: OAuth2Client
+  oauth2Client: OAuth2Client,
 ) {
   const { name, arguments: args } = request.params;
 

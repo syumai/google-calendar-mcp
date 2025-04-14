@@ -3,7 +3,7 @@
  */
 // Tell TypeScript to ignore type errors in this file
 // @ts-nocheck - Removing this as Vitest should handle types better
-import { describe, it, expect, vi, beforeEach, beforeAll } from "vitest";
+import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 // Import the types we need to mock properly
 import type { google as GoogleApis } from "googleapis";
@@ -190,10 +190,10 @@ describe("Google Calendar MCP Tool Calls", () => {
     if (!callToolHandler) {
       console.error(
         "capturedHandlerMap on server instance:",
-        server?.capturedHandlerMap
+        server?.capturedHandlerMap,
       );
       throw new Error(
-        "CallTool handler not captured from server instance after main run."
+        "CallTool handler not captured from server instance after main run.",
       );
     }
   });
@@ -230,7 +230,7 @@ describe("Google Calendar MCP Tool Calls", () => {
     // Act & Assert: Expect the handler to reject because we mocked validateTokens to return false
     if (!callToolHandler) throw new Error("callToolHandler not captured");
     await expect(callToolHandler(request)).rejects.toThrow(
-      "Authentication required. Please run 'npm run auth' to authenticate."
+      "Authentication required. Please run 'npm run auth' to authenticate.",
     );
   });
 
@@ -329,7 +329,8 @@ describe("Google Calendar MCP Tool Calls", () => {
       content: [
         {
           type: "text",
-          text: `Event created: ${mockApiResponse.summary} (${mockApiResponse.id})`,
+          text:
+            `Event created: ${mockApiResponse.summary} (${mockApiResponse.id})`,
         },
       ],
     });
@@ -383,7 +384,7 @@ describe("Google Calendar MCP Tool Calls", () => {
     (mockCalendarApi.events.list as ReturnType<typeof vi.fn>).mockResolvedValue(
       {
         data: { items: mockEvents },
-      }
+      },
     );
 
     const request = {
@@ -431,7 +432,7 @@ describe("Google Calendar MCP Tool Calls", () => {
     (mockCalendarApi.events.list as ReturnType<typeof vi.fn>).mockResolvedValue(
       {
         data: { items: mockEvents },
-      }
+      },
     );
 
     const request = {
@@ -516,10 +517,10 @@ describe("Google Calendar MCP Tool Calls", () => {
     expect(mockCalendarApi.colors.get).toHaveBeenCalled();
     expect(result.content[0].text).toContain("Available event colors:");
     expect(result.content[0].text).toContain(
-      "Color ID: 1 - #a4bdfc (background) / #1d1d1d (foreground)"
+      "Color ID: 1 - #a4bdfc (background) / #1d1d1d (foreground)",
     );
     expect(result.content[0].text).toContain(
-      "Color ID: 2 - #7ae7bf (background) / #1d1d1d (foreground)"
+      "Color ID: 2 - #7ae7bf (background) / #1d1d1d (foreground)",
     );
   });
 
@@ -576,7 +577,7 @@ describe("Google Calendar MCP Tool Calls", () => {
       },
     });
     expect(result.content[0].text).toBe(
-      `Event updated: ${mockApiResponse.summary} (${mockApiResponse.id})`
+      `Event updated: ${mockApiResponse.summary} (${mockApiResponse.id})`,
     );
   });
 

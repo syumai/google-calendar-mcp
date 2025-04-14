@@ -19,7 +19,7 @@ export async function initializeOAuth2Client(): Promise<OAuth2Client> {
     throw new Error(
       `Error loading OAuth keys: ${
         error instanceof Error ? error.message : error
-      }`
+      }`,
     );
   }
 }
@@ -40,7 +40,7 @@ export async function loadCredentials(): Promise<{
     throw new Error(
       `Error loading credentials: ${
         error instanceof Error ? error.message : error
-      }`
+      }`,
     );
   }
 }

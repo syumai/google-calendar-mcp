@@ -1,8 +1,8 @@
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import {
-  ListToolsRequestSchema,
   CallToolRequestSchema,
+  ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 import type { OAuth2Client } from "google-auth-library";
 
@@ -23,7 +23,7 @@ const server = new Server(
     capabilities: {
       tools: {},
     },
-  }
+  },
 );
 
 let oauth2Client: OAuth2Client;
@@ -58,7 +58,7 @@ async function main() {
       // Check if tokens are valid before handling the request
       if (!(await tokenManager.validateTokens())) {
         throw new Error(
-          "Authentication required. Please run 'npm run auth' to authenticate."
+          "Authentication required. Please run 'npm run auth' to authenticate.",
         );
       }
 

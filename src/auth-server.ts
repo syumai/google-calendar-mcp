@@ -18,7 +18,7 @@ async function runAuthServer() {
     if (!success && !authServer.authCompletedSuccessfully) {
       // Failed to start and tokens weren't already valid
       process.stderr.write(
-        "Authentication failed. Could not start server or validate existing tokens. Check port availability (3000-3004) and try again.\n"
+        "Authentication failed. Could not start server or validate existing tokens. Check port availability (3000-3004) and try again.\n",
       );
       process.exit(1);
     } else if (authServer.authCompletedSuccessfully) {
@@ -29,7 +29,7 @@ async function runAuthServer() {
 
     // If we reach here, the server started and is waiting for the browser callback
     process.stderr.write(
-      "Authentication server started. Please complete the authentication in your browser...\n"
+      "Authentication server started. Please complete the authentication in your browser...\n",
     );
 
     // Poll for completion or handle SIGINT
@@ -54,7 +54,7 @@ async function runAuthServer() {
     process.stderr.write(
       `Authentication error: ${
         error instanceof Error ? error.message : "Unknown error"
-      }\n`
+      }\n`,
     );
     if (authServer) await authServer.stop(); // Attempt cleanup
     process.exit(1);
@@ -67,7 +67,7 @@ if (import.meta.url.endsWith("auth-server.ts")) {
     process.stderr.write(
       `Unhandled error: ${
         error instanceof Error ? error.message : "Unknown error"
-      }\n`
+      }\n`,
     );
     process.exit(1);
   });
